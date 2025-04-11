@@ -62,6 +62,42 @@ This Escrow Program is a smart contract built on Solana using Anchor. It facilit
    - Each instruction (make, take, refund) has its own module
    - State management is separated from instruction logic
 
+### 🧪 Test Results
+
+```
+  escrow
+Initialize escrow transaction signature 3qxHmpfKWZ9FHpNRkWkoWnF7qqcXW9Wc4GE3bRRD9ZdUNwdSqhFCXiWH2H7pNGCrn8kic1GpvVineTR7bCYqK2JM
+Escrow state: {
+  seed: <BN: 28d31>,
+  maker: PublicKey [PublicKey(CAE9xjcvE66PoXMNvdZJ84476mbFmpcC9ocRKpW2jbtx)] {
+    _bn: <BN: a5cda84589751b6a447f54f36f2116a260b3a0afb71e23ccc08cb356b1c2660d>
+  },
+  mintA: PublicKey [PublicKey(5XqkgK9SgEse7c67L42j1pCHrWENNBpr2JjWfxVsHDo7)] {
+    _bn: <BN: 43554c183b246679b666cff9c86e998cf96e9d30ec367dba469dc03a275d3902>
+  },
+  mintB: PublicKey [PublicKey(CarSt5RwPYMJCt2cJ4URztg82YSEyr7Y1fJebQbb5NAf)] {
+    _bn: <BN: ac1ca1c496c3208c19ee843fabaec9adb538604ab4e0b7baa6d538207e06d5e4>
+  },
+  receiveAmount: <BN: 64>,
+  bump: 255
+}
+    ✔ Initialize escrow (474ms)
+Take escrow transaction signature ofnuGfWtggTpHDQqiZkQgzJL23b3txXBaBJeia1w3nxgUBscZC7LvEZD6eLi3eNGArdkZUJVgMVfh4fsUtRQjZj
+    ✔ Take escrow (502ms)
+Refund escrow transaction signature J2WDCCkBDQUJwuQLC555ZpGQJAURTh5vcL55qXJGn4WCrUe9umcQKdN2vjwD6qJQ77zss169JSBxN3DidvrJMSs
+    ✔ Refund escrow (9517ms)
+
+
+  3 passing (15s)
+```
+
+The test results show:
+1. **Successful creation** of an escrow with proper state initialization 
+2. **Successful token swap** through the take instruction
+3. **Successful refund** of tokens to the maker
+
+All three core functions pass their tests, confirming the program works as designed.
+
 ## Building and Testing
 
 ```bash
