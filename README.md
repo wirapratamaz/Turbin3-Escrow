@@ -41,10 +41,32 @@ Directory structure:
 anchor build
 anchor deploy
 ```
-Generate IDL:
+2. Generate IDL:
 ```
 anchor idl parse --file target/idl/escrow.json
 ```
 
+## Development Progress
+
+### Completed
+- ✅ Program structure setup with Anchor
+- ✅ Escrow state definition with all required fields
+- ✅ Make instruction implemented (create escrow and deposit tokens)
+- ✅ Take instruction implemented (fulfill escrow and exchange tokens)
+- ✅ Refund instruction implemented (cancel escrow and return tokens)
+- ✅ Program built and deployed to local validator
+- ✅ Test file structure created
+
+### In Progress
+- ⚠️ Fixing test account name mismatches with program IDL
+- ⚠️ Addressing stack size exceeded errors in Take instruction
+- ⚠️ Resolving test assertion issues in Refund functionality
+
+### Next Steps
+- 📝 Complete and fix test suite
+- 📝 Add more comprehensive test scenarios
+- 📝 Optimize account structures to reduce stack usage
+- 📝 Consider adding a frontend interface for the escrow program
+
 ## Conclusion
-This Escrow Program provides a robust and trustless way to exchange tokens securely on Solana, leveraging Anchor's powerful framework. 
+This Escrow Program provides a robust and trustless way to exchange tokens securely on Solana, leveraging Anchor's powerful framework. The core functionality is implemented and working, with some optimizations and testing improvements still needed. 
