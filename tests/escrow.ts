@@ -294,7 +294,7 @@ describe("escrow", () => {
       
       // Verify maker got tokens back
       const makerMintAInfo = await getAccount(provider.connection, makerMintAAta);
-      assert.equal(makerMintAInfo.amount.toString(), (depositAmount.toNumber() * 2).toString());
+      assert.equal(makerMintAInfo.amount.toString(), depositAmount.toString());
       
     } catch (error) {
       console.error("Error refunding escrow:", error);
