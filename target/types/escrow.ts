@@ -14,16 +14,16 @@ export type Escrow = {
   },
   "instructions": [
     {
-      "name": "make",
+      "name": "makeOffer",
       "discriminator": [
-        138,
-        227,
-        232,
-        77,
-        223,
-        166,
-        96,
-        197
+        214,
+        98,
+        97,
+        35,
+        59,
+        12,
+        44,
+        178
       ],
       "accounts": [
         {
@@ -32,13 +32,13 @@ export type Escrow = {
           "signer": true
         },
         {
-          "name": "mintA"
+          "name": "tokenMintA"
         },
         {
-          "name": "mintB"
+          "name": "tokenMintB"
         },
         {
-          "name": "makerMintAAta",
+          "name": "makerTokenAccountA",
           "writable": true,
           "pda": {
             "seeds": [
@@ -47,45 +47,12 @@ export type Escrow = {
                 "path": "maker"
               },
               {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "kind": "account",
+                "path": "tokenProgram"
               },
               {
                 "kind": "account",
-                "path": "mintA"
+                "path": "tokenMintA"
               }
             ],
             "program": {
@@ -128,19 +95,18 @@ export type Escrow = {
           }
         },
         {
-          "name": "escrow",
+          "name": "offer",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  101,
-                  115,
-                  99,
-                  114,
                   111,
-                  119
+                  102,
+                  102,
+                  101,
+                  114
                 ]
               },
               {
@@ -149,7 +115,7 @@ export type Escrow = {
               },
               {
                 "kind": "arg",
-                "path": "seeds"
+                "path": "id"
               }
             ]
           }
@@ -161,48 +127,15 @@ export type Escrow = {
             "seeds": [
               {
                 "kind": "account",
-                "path": "escrow"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "path": "offer"
               },
               {
                 "kind": "account",
-                "path": "mintA"
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "tokenMintA"
               }
             ],
             "program": {
@@ -245,55 +178,58 @@ export type Escrow = {
           }
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
-        },
-        {
           "name": "associatedTokenProgram",
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "seeds",
+          "name": "id",
           "type": "u64"
         },
         {
-          "name": "receiveAmount",
+          "name": "tokenAOfferedAmount",
           "type": "u64"
         },
         {
-          "name": "depositAmount",
+          "name": "tokenBWantedAmount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "refund",
+      "name": "refundOffer",
       "discriminator": [
-        2,
-        96,
-        183,
-        251,
-        63,
-        208,
-        46,
-        46
+        171,
+        18,
+        70,
+        32,
+        244,
+        121,
+        60,
+        75
       ],
       "accounts": [
         {
-          "name": "mintA"
-        },
-        {
           "name": "maker",
           "writable": true,
-          "signer": true
+          "signer": true,
+          "relations": [
+            "offer"
+          ]
         },
         {
-          "name": "makerMintAAta",
+          "name": "tokenMintA"
+        },
+        {
+          "name": "makerTokenAccountA",
           "writable": true,
           "pda": {
             "seeds": [
@@ -302,45 +238,12 @@ export type Escrow = {
                 "path": "maker"
               },
               {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "kind": "account",
+                "path": "tokenProgram"
               },
               {
                 "kind": "account",
-                "path": "mintA"
+                "path": "tokenMintA"
               }
             ],
             "program": {
@@ -380,6 +283,33 @@ export type Escrow = {
                 89
               ]
             }
+          }
+        },
+        {
+          "name": "offer",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  102,
+                  102,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "maker"
+              },
+              {
+                "kind": "account",
+                "path": "offer.id",
+                "account": "offer"
+              }
+            ]
           }
         },
         {
@@ -389,48 +319,15 @@ export type Escrow = {
             "seeds": [
               {
                 "kind": "account",
-                "path": "escrow"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "path": "offer"
               },
               {
                 "kind": "account",
-                "path": "mintA"
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "tokenMintA"
               }
             ],
             "program": {
@@ -473,59 +370,26 @@ export type Escrow = {
           }
         },
         {
-          "name": "escrow",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  101,
-                  115,
-                  99,
-                  114,
-                  111,
-                  119
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "escrow.maker",
-                "account": "escrowState"
-              },
-              {
-                "kind": "account",
-                "path": "escrow.seed",
-                "account": "escrowState"
-              }
-            ]
-          }
+          "name": "tokenProgram"
         },
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-        },
-        {
-          "name": "tokenProgram"
         }
       ],
       "args": []
     },
     {
-      "name": "take",
+      "name": "takeOffer",
       "discriminator": [
-        149,
-        226,
-        52,
-        104,
-        6,
-        142,
-        230,
-        39
+        128,
+        156,
+        242,
+        207,
+        237,
+        192,
+        103,
+        240
       ],
       "accounts": [
         {
@@ -534,26 +398,23 @@ export type Escrow = {
           "signer": true
         },
         {
-          "name": "mintA",
-          "relations": [
-            "escrow"
-          ]
-        },
-        {
-          "name": "mintB",
-          "relations": [
-            "escrow"
-          ]
-        },
-        {
           "name": "maker",
           "writable": true,
           "relations": [
-            "escrow"
+            "offer"
           ]
         },
         {
-          "name": "takerMintBAta",
+          "name": "tokenMintA"
+        },
+        {
+          "name": "tokenMintB",
+          "relations": [
+            "offer"
+          ]
+        },
+        {
+          "name": "takerTokenAccountA",
           "writable": true,
           "pda": {
             "seeds": [
@@ -562,45 +423,12 @@ export type Escrow = {
                 "path": "taker"
               },
               {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "kind": "account",
+                "path": "tokenProgram"
               },
               {
                 "kind": "account",
-                "path": "mintB"
+                "path": "tokenMintA"
               }
             ],
             "program": {
@@ -643,30 +471,142 @@ export type Escrow = {
           }
         },
         {
-          "name": "escrow",
+          "name": "takerTokenAccountB",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "taker"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "tokenMintB"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "makerTokenAccountB",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "maker"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "tokenMintB"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "offer",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  101,
-                  115,
-                  99,
-                  114,
                   111,
-                  119
+                  102,
+                  102,
+                  101,
+                  114
                 ]
               },
               {
                 "kind": "account",
-                "path": "escrow.maker",
-                "account": "escrowState"
+                "path": "maker"
               },
               {
                 "kind": "account",
-                "path": "escrow.seed",
-                "account": "escrowState"
+                "path": "offer.id",
+                "account": "offer"
               }
             ]
           }
@@ -678,48 +618,15 @@ export type Escrow = {
             "seeds": [
               {
                 "kind": "account",
-                "path": "escrow"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "path": "offer"
               },
               {
                 "kind": "account",
-                "path": "mintA"
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "tokenMintA"
               }
             ],
             "program": {
@@ -760,190 +667,6 @@ export type Escrow = {
               ]
             }
           }
-        },
-        {
-          "name": "takerMintAAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "taker"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mintA"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
-        },
-        {
-          "name": "makerMintBAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "maker"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mintB"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
         },
         {
           "name": "associatedTokenProgram",
@@ -951,6 +674,10 @@ export type Escrow = {
         },
         {
           "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -958,39 +685,34 @@ export type Escrow = {
   ],
   "accounts": [
     {
-      "name": "escrowState",
+      "name": "offer",
       "discriminator": [
-        19,
-        90,
-        148,
-        111,
-        55,
-        130,
-        229,
-        108
+        215,
+        88,
+        60,
+        71,
+        170,
+        162,
+        73,
+        229
       ]
     }
   ],
   "errors": [
     {
       "code": 6000,
-      "name": "invalidVault",
-      "msg": "Invalid Vault Account"
-    },
-    {
-      "code": 6001,
-      "name": "invalidMaker",
-      "msg": "Invalid Maker Account"
+      "name": "customError",
+      "msg": "Custom error message"
     }
   ],
   "types": [
     {
-      "name": "escrowState",
+      "name": "offer",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "seed",
+            "name": "id",
             "type": "u64"
           },
           {
@@ -998,15 +720,15 @@ export type Escrow = {
             "type": "pubkey"
           },
           {
-            "name": "mintA",
+            "name": "tokenMintA",
             "type": "pubkey"
           },
           {
-            "name": "mintB",
+            "name": "tokenMintB",
             "type": "pubkey"
           },
           {
-            "name": "receiveAmount",
+            "name": "tokenBWantedAmount",
             "type": "u64"
           },
           {
