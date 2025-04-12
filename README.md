@@ -1,7 +1,21 @@
-# Solana Escrow Program from Turbin3
+# Solana Escrow Program 2025 from Turbin3
+
+## 🎉 Project Milestones
+- ✅ Successfully migrated to Escrow 2025 reference architecture
+- ✅ Implemented modern Solana stack with `@solana/kit`, Kite, and Codama
+- ✅ All tests passing for make_offer, take_offer, and refund_offer operations
+- ✅ Enhanced code structure and organization
 
 ## Overview
 This Escrow Program is a smart contract built on Solana using Anchor. It facilitates secure token swaps between users without requiring direct trust. The escrow holds tokens from a maker until a taker fulfills the exchange conditions, at which point the tokens are transferred accordingly. If the taker does not fulfill the agreement, the maker can withdraw the tokens.
+
+## Modern Solana Stack
+This project has been updated to use the latest Solana development technologies:
+
+- **Anchor 0.31.0**: Latest version of the Solana smart contract framework
+- **@solana/kit**: Modern client-side utilities for Solana
+- **Solana-Kite**: Simplified wallet and token management 
+- **Codama**: Modern TS client generation from Anchor IDL
 
 ## Token Swap Flow
 The following sequence diagram illustrates the high-level flow of the escrow program:
@@ -10,26 +24,26 @@ The following sequence diagram illustrates the high-level flow of the escrow pro
 sequenceDiagram
     participant Maker
     participant Escrow Program
-    participant Escrow PDA
+    participant Offer PDA
     participant Taker
     
     Note over Maker,Taker: Scenario 1: Successful Token Swap
-    Maker->>Escrow Program: make(tokenA_amount, tokenB_amount)
-    Note right of Maker: Specifies amount of tokenA to deposit<br/>and tokenB amount desired in return
-    Escrow Program->>Escrow PDA: Create escrow account & store state
-    Escrow Program->>Escrow PDA: Transfer tokenA from Maker
+    Maker->>Escrow Program: make_offer(id, token_a_offered_amount, token_b_wanted_amount)
+    Note right of Maker: Specifies amount of tokenA to offer<br/>and tokenB amount wanted in return
+    Escrow Program->>Offer PDA: Create offer account & store state
+    Escrow Program->>Offer PDA: Transfer tokenA from Maker to vault
     
-    Taker->>Escrow Program: take(escrow_account)
+    Taker->>Escrow Program: take_offer(offer_account)
     Note right of Taker: Agrees to the trade terms
-    Escrow Program->>Taker: Transfer tokenA from Escrow PDA
+    Escrow Program->>Taker: Transfer tokenA from vault
     Escrow Program->>Maker: Transfer tokenB from Taker
-    Escrow Program->>Escrow PDA: Close escrow account
+    Escrow Program->>Offer PDA: Close offer account
     
     Note over Maker,Taker: Scenario 2: Escrow Cancellation
-    Maker->>Escrow Program: refund(escrow_account)
-    Note right of Maker: Cancels the escrow if no taker
-    Escrow Program->>Maker: Return tokenA from Escrow PDA
-    Escrow Program->>Escrow PDA: Close escrow account
+    Maker->>Escrow Program: refund_offer(offer_account)
+    Note right of Maker: Cancels the offer if no taker
+    Escrow Program->>Maker: Return tokenA from vault
+    Escrow Program->>Offer PDA: Close offer account
 ```
 
 ## Directory Structure
@@ -38,8 +52,10 @@ sequenceDiagram
     ├── README.md
     ├── Anchor.toml
     ├── Cargo.toml
+    ├── create-codama-client.ts
     ├── package.json
     ├── tsconfig.json
+    ├── prettier.config.js
     ├── .prettierignore
     ├── migrations/
     │   └── deploy.ts
@@ -48,17 +64,23 @@ sequenceDiagram
     │       ├── Cargo.toml
     │       ├── Xargo.toml
     │       └── src/
+    │           ├── constants.rs
+    │           ├── error.rs
     │           ├── lib.rs
-    │           ├── instructions/
-    │           │   ├── make.rs
+    │           ├── handlers/
+    │           │   ├── make_offer.rs
     │           │   ├── mod.rs
     │           │   ├── refund.rs
-    │           │   └── take.rs
+    │           │   ├── shared.rs
+    │           │   └── take_offer.rs
     │           └── state/
-    │               ├── escrow.rs
-    │               └── mod.rs
+    │               ├── mod.rs
+    │               └── offer.rs
+    ├── dist/
+    │   └── js-client/
+    │       └── [Generated TypeScript client files]
     └── tests/
-        └── escrow.ts
+        └── escrow.test.ts
 ```
 
 ## Key Features
@@ -68,9 +90,9 @@ sequenceDiagram
    - Implements proper authentication checks for all operations
 
 2. **Full Token Swap Functionality**
-   - `make`: Create an escrow and deposit tokens
-   - `take`: Complete a swap by providing the required tokens
-   - `refund`: Allow the maker to withdraw their tokens if the swap hasn't been taken
+   - `make_offer`: Create an offer and deposit tokens
+   - `take_offer`: Complete a swap by providing the required tokens
+   - `refund_offer`: Allow the maker to withdraw their tokens if the swap hasn't been taken
 
 3. **Optimized for Performance**
    - Uses `Box<>` for large account structures to prevent stack overflow errors
@@ -79,50 +101,30 @@ sequenceDiagram
 4. **Token Standard Support**
    - Compatible with both SPL Token and Token-2022 standards via Token Interface
 
-## Technical Optimizations
-
-1. **Stack Size Management**
-   - The program uses Rust's `Box<>` to move large accounts to the heap instead of the stack
-   - This prevents the "stack offset exceeded max offset" error that can occur with complex account structures
-   - Applied to both instruction contexts and account data to ensure optimal memory usage
-
-2. **Code Structure**
-   - Clean separation of concerns with modular design
-   - Each instruction (make, take, refund) has its own module
-   - State management is separated from instruction logic
-
 ### 🧪 Test Results
 
 ```
-  escrow
-Initialize escrow transaction signature 3qxHmpfKWZ9FHpNRkWkoWnF7qqcXW9Wc4GE3bRRD9ZdUNwdSqhFCXiWH2H7pNGCrn8kic1GpvVineTR7bCYqK2JM
-Escrow state: {
-  seed: <BN: 28d31>,
-  maker: PublicKey [PublicKey(CAE9xjcvE66PoXMNvdZJ84476mbFmpcC9ocRKpW2jbtx)] {
-    _bn: <BN: a5cda84589751b6a447f54f36f2116a260b3a0afb71e23ccc08cb356b1c2660d>
-  },
-  mintA: PublicKey [PublicKey(5XqkgK9SgEse7c67L42j1pCHrWENNBpr2JjWfxVsHDo7)] {
-    _bn: <BN: 43554c183b246679b666cff9c86e998cf96e9d30ec367dba469dc03a275d3902>
-  },
-  mintB: PublicKey [PublicKey(CarSt5RwPYMJCt2cJ4URztg82YSEyr7Y1fJebQbb5NAf)] {
-    _bn: <BN: ac1ca1c496c3208c19ee843fabaec9adb538604ab4e0b7baa6d538207e06d5e4>
-  },
-  receiveAmount: <BN: 64>,
-  bump: 255
-}
-    ✔ Initialize escrow (474ms)
-Take escrow transaction signature ofnuGfWtggTpHDQqiZkQgzJL23b3txXBaBJeia1w3nxgUBscZC7LvEZD6eLi3eNGArdkZUJVgMVfh4fsUtRQjZj
-    ✔ Take escrow (502ms)
-Refund escrow transaction signature J2WDCCkBDQUJwuQLC555ZpGQJAURTh5vcL55qXJGn4WCrUe9umcQKdN2vjwD6qJQ77zss169JSBxN3DidvrJMSs
-    ✔ Refund escrow (9517ms)
-
-
-  3 passing (15s)
+string offer
+address B3yyK5gwgWFo78CZ256fjkhMEX2Q168Cy4iBPD5V2ngg
+▶ Escrow
+  ✔ Puts the tokens Alice offers into the vault when Alice makes an offer (470.489166ms)
+string offer
+address B3yyK5gwgWFo78CZ256fjkhMEX2Q168Cy4iBPD5V2ngg
+  ✔ Puts the tokens from the vault into Bob's account, and gives Alice Bob's tokens, when Bob takes an offer (467.330417ms)
+  ✔ Returns tokens to Alice when she refunds her offer (933.442458ms)
+✔ Escrow (18598.789291ms)
+ℹ tests 3
+ℹ suites 1
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
 ```
 
 The test results show:
-1. **Successful creation** of an escrow with proper state initialization 
-2. **Successful token swap** through the take instruction
+1. **Successful creation** of an offer with proper state initialization 
+2. **Successful token swap** through the take_offer instruction
 3. **Successful refund** of tokens to the maker
 
 All three core functions pass their tests, confirming the program works as designed.
@@ -130,6 +132,12 @@ All three core functions pass their tests, confirming the program works as desig
 ## Building and Testing
 
 ```bash
+# Install dependencies
+npm install
+
+# Generate the TypeScript client
+npx tsx create-codama-client.ts
+
 # Build the program
 anchor build
 
@@ -143,8 +151,8 @@ anchor test
 anchor build
 anchor deploy
 
-# Generate IDL
-anchor idl parse --file target/idl/escrow.json
+# Generate TypeScript client
+npx tsx create-codama-client.ts
 ```
 
 ## Security Considerations
@@ -163,4 +171,4 @@ The program implements several security measures:
 4. **Front-end Integration**: Build a web interface to interact with the escrow program
 
 ## Conclusion
-This Escrow Program provides a robust and trustless way to exchange tokens securely on Solana, leveraging Anchor's powerful framework. 
+This Escrow Program provides a robust and trustless way to exchange tokens securely on Solana, leveraging the latest Anchor framework and Solana technologies. The migration to the modern 2025 reference architecture ensures the code follows best practices and is optimized for the current Solana ecosystem. 
