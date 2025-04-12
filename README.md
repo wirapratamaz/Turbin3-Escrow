@@ -3,6 +3,35 @@
 ## Overview
 This Escrow Program is a smart contract built on Solana using Anchor. It facilitates secure token swaps between users without requiring direct trust. The escrow holds tokens from a maker until a taker fulfills the exchange conditions, at which point the tokens are transferred accordingly. If the taker does not fulfill the agreement, the maker can withdraw the tokens.
 
+## Token Swap Flow
+The following sequence diagram illustrates the high-level flow of the escrow program:
+
+```mermaid
+sequenceDiagram
+    participant Maker
+    participant Escrow Program
+    participant Escrow PDA
+    participant Taker
+    
+    Note over Maker,Taker: Scenario 1: Successful Token Swap
+    Maker->>Escrow Program: make(tokenA_amount, tokenB_amount)
+    Note right of Maker: Specifies amount of tokenA to deposit<br/>and tokenB amount desired in return
+    Escrow Program->>Escrow PDA: Create escrow account & store state
+    Escrow Program->>Escrow PDA: Transfer tokenA from Maker
+    
+    Taker->>Escrow Program: take(escrow_account)
+    Note right of Taker: Agrees to the trade terms
+    Escrow Program->>Taker: Transfer tokenA from Escrow PDA
+    Escrow Program->>Maker: Transfer tokenB from Taker
+    Escrow Program->>Escrow PDA: Close escrow account
+    
+    Note over Maker,Taker: Scenario 2: Escrow Cancellation
+    Maker->>Escrow Program: refund(escrow_account)
+    Note right of Maker: Cancels the escrow if no taker
+    Escrow Program->>Maker: Return tokenA from Escrow PDA
+    Escrow Program->>Escrow PDA: Close escrow account
+```
+
 ## Directory Structure
 ```
 └── Turbin3-Escrow/
